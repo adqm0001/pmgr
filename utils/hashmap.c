@@ -17,7 +17,7 @@ HashMap *hashmap_create(int capacity){
 }
 
 int hash_function(char *string, int capacity){
-  uint64_t hash = 14695981039346656037;
+  uint64_t hash = 14695981039346656037ULL;
   for (int i = 0; i < strlen(string); i++) {
     hash = hash ^ string[i];
     hash = hash * 1099511628211;

@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include "utils/hashmap.h"
+#include "config.h"
 
 int main(int argc, char *argv[]){
   if (argc < 3) {
@@ -10,6 +12,16 @@ int main(int argc, char *argv[]){
   const char *group = argv[2];
   printf("command: %s\n", command);
   printf("group: %s\n", group);
+
+  HashMap *hashmap = hashmap_create(10);
+
+  load_config(hashmap);
+  char *test_key = "cu-scraper";
+  char *values = get(hashmap, test_key);
+  printf("Values: %s", values);
+
+  free_hashmap(hashmap);
+
   return 0;
 }
 
