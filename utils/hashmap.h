@@ -2,7 +2,7 @@
 #define HASHMAP_C
 
 typedef struct Node {
-  char *key; 
+  const char *key; 
   char *value;
   struct Node *next;
 } Node;
@@ -14,11 +14,11 @@ typedef struct HashMap {
 
 HashMap *hashmap_create(int capacity);
 
-int hash_function(char *string, int capacity);
+int hash_function(const char *string, int capacity);
 
-void insert(HashMap *hashmap, char *key, char *value);
+void insert(HashMap *hashmap, const char *key, char *value);
 
-char* get(HashMap *hashmap, char *key);
+char* get(HashMap *hashmap, const char *key);
 
 void free_hashmap(HashMap *hashmap);
 

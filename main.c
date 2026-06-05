@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "utils/hashmap.h"
 #include "config.h"
+#include <string.h>
+#include "command.h"
 
 int main(int argc, char *argv[]){
   if (argc < 3) {
@@ -16,9 +18,18 @@ int main(int argc, char *argv[]){
   HashMap *hashmap = hashmap_create(10);
 
   load_config(hashmap);
-  char *test_key = "cu-scraper";
-  char *values = get(hashmap, test_key);
-  printf("Values: %s", values);
+  printf("-----------------------\n");
+
+  const char *status = "status";
+  const char *logs = "logs";
+  const char *restart = "restart";
+  if (!(strcmp(command, status))){
+    cmd_status(hashmap, group);
+  } else if (!(strcmp(command, logs))){
+    cmd_logs(hashmap, group);
+  } else if (!(strcmp(command, restart))){
+    cmd_restart(hashmap, group);
+  }
 
   free_hashmap(hashmap);
 

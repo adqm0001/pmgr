@@ -16,7 +16,7 @@ HashMap *hashmap_create(int capacity){
   return hashmap;
 }
 
-int hash_function(char *string, int capacity){
+int hash_function(const char *string, int capacity){
   uint64_t hash = 14695981039346656037ULL;
   for (int i = 0; i < strlen(string); i++) {
     hash = hash ^ string[i];
@@ -25,7 +25,7 @@ int hash_function(char *string, int capacity){
   return (int)(hash % capacity);
 }
 
-void insert(HashMap *hashmap, char *key, char *value){
+void insert(HashMap *hashmap, const char *key, char *value){
   int index = hash_function(key, hashmap->capacity);
   Node **array = hashmap->arr;
   Node *to_add = malloc(sizeof(Node));
@@ -36,7 +36,7 @@ void insert(HashMap *hashmap, char *key, char *value){
   hashmap->size = hashmap->size + 1;
 }
 
-char* get(HashMap *hashmap, char *key){
+char* get(HashMap *hashmap, const char *key){
   int index = hash_function(key, hashmap->capacity);
   Node **array = hashmap->arr;
   Node *head = array[index];
