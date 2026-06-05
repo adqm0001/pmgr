@@ -95,7 +95,7 @@ void cmd_restart(HashMap *hashmap, const char *key){
     char cmd[256];
     snprintf(cmd, sizeof(cmd), "systemctl restart %s", units[i]);
     FILE *output = popen(cmd, "r"); 
-    printf("Restarted %s", units[i]);
+    printf("Restarted %s\n", units[i]);
     pclose(output);
   }
 }
