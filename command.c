@@ -63,6 +63,7 @@ void cmd_status(HashMap *hashmap, const char *key){
   for (int i = 0; i < count; i++){
     char cmd[256];
     snprintf(cmd, sizeof(cmd), "systemctl status %s", units[i]);
+    printf("=== %s ===\n", units[i]);
     FILE *output = popen(cmd, "r"); 
     if (output == NULL) return;
     char line[256];
@@ -72,12 +73,14 @@ void cmd_status(HashMap *hashmap, const char *key){
     pclose(output);
   }
 }
-void cmd_logs(HashMap *hashmap, const char *key){
+void cmd_logs(HashMap *hashmap, const char *key, int max_logs){
   int count = 0;
   char **units = get_units(hashmap, key, &count);
   for (int i = 0; i < count; i++){
     char cmd[256];
-    snprintf(cmd, sizeof(cmd), "journalctl -u %s", units[i]);
+    if (!max_logs) snprintf(cmd, sizeof(cmd), "journalctl -u %s", units[i]);
+    else snprintf(cmd, sizeof(cmd), "journalctl -u %s -n %d", units[i], max_logs);
+    printf("=== %s ===\n", units[i]);
     FILE *output = popen(cmd, "r"); 
     if (output == NULL) return;
     char line[256];
@@ -94,6 +97,7 @@ void cmd_restart(HashMap *hashmap, const char *key){
   for (int i = 0; i < count; i++){
     char cmd[256];
     snprintf(cmd, sizeof(cmd), "systemctl restart %s", units[i]);
+    printf("=== %s ===\n", units[i]);
     FILE *output = popen(cmd, "r"); 
     printf("Restarted %s\n", units[i]);
     pclose(output);
