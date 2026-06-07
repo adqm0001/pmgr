@@ -1,3 +1,3 @@
 #include "utils/hashmap.h"
 
-void load_config(HashMap *hashmap);
+void load_config(HashMap *units, HashMap *commands);

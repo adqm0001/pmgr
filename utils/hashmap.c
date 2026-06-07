@@ -26,14 +26,23 @@ int hash_function(const char *string, int capacity){
 }
 
 void insert(HashMap *hashmap, const char *key, char *value){
-  int index = hash_function(key, hashmap->capacity);
-  Node **array = hashmap->arr;
-  Node *to_add = malloc(sizeof(Node));
-  to_add->key = key;
-  to_add->value = value;
-  to_add->next = array[index];
-  array[index] = to_add;
-  hashmap->size = hashmap->size + 1;
+    int index = hash_function(key, hashmap->capacity);
+    Node **array = hashmap->arr;
+
+    Node *curr = array[index];
+    while (curr != NULL){
+        if (strcmp(curr->key, key) == 0){
+            curr->value = value;
+            return;
+        }
+        curr = curr->next;
+    }
+    Node *to_add = malloc(sizeof(Node));
+    to_add->key = strdup(key);
+    to_add->value = value;
+    to_add->next = array[index];
+    array[index] = to_add;
+    hashmap->size = hashmap->size + 1;
 }
 
 char* get(HashMap *hashmap, const char *key){
@@ -54,6 +63,8 @@ void free_hashmap(HashMap *hashmap){
     while (head != NULL){
       Node *temp = head;
       head = head->next;
+      free((char *)temp->key);
+      free(temp->value); 
       free(temp);
     }
   }

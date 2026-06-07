@@ -46,9 +46,10 @@ int main(int argc, char *argv[]){
   printf("command: %s\n", command);
   printf("group: %s\n", group);
 
-  HashMap *hashmap = hashmap_create(10);
+  HashMap *units = hashmap_create(10);
+  HashMap *commands = hashmap_create(10)
 
-  load_config(hashmap);
+  load_config(units, commands);
   printf("-----------------------\n");
 
   const char *status = "status";
