@@ -1,13 +1,13 @@
-#include "utils/hashmap.h"
+#include "utils/units.h"
 #include <string.h>
 #include <stdio.h> 
 #include <stdlib.h>
 
-char **get_units(HashMap *hashmap, const char *key, int *count){
+char **get_units(HashMap *units, const char *key, int *count){
   char **units_arr = NULL;
   char *current_unit_ptr = NULL;
   *count = 0;
-  char *values = get(hashmap, key);
+  char *values = get(units, key);
   char delimiter = ',';
   int start_idx = 0;
   int end_idx = 0;
@@ -57,13 +57,59 @@ char **get_units(HashMap *hashmap, const char *key, int *count){
   return units_arr;
 }
 
-void cmd_status(HashMap *hashmap, const char *key){
+char **get_custom_commands(HashMap *commands, const char *key, int *count){
+  char **commands_info_arr = NULL;
+  char *current_command_ptr = NULL;
+  *count = 0;
+  char *values = get(units, key);
+  char delimiter = ',';
+  int start_idx = 0;
+  int end_idx = 0;
+  int i = 0;
+
+  for (i = 0; values[i] != '\0'; i++){
+    if (values[i] == delimiter){
+      end_idx = i; 
+      if (end_idx - start_idx == 0) continue;
+      
+      char current_command[end_idx - start_idx + 1];
+      for (int j = start_idx, command_idx = 0; j < end_idx; j++, command_idx++){
+        current_command[command_idx] = values[j];
+      }
+      current_command[end_idx - start_idx] = '\0';
+
+      current_command_ptr = malloc(end_idx - start_idx + 1);
+      strcpy
+    }
+  }
+}
+
+  
+char **get_commands_info(HashMap *commands, const char *key, int *count){
+  char **commands_info_arr = NULL;
+  char *current_unit_ptr = NULL;
+  *count = 0;
+  char *values = get(units, key);
+  char delimiter = ',';
+  int start_idx = 0;
+  int end_idx = 0;
+  int i = 0;
+
+  for (i = 0; values[i] != '\0'; i++){
+    if (values[i] == delimiter){
+      end_idx = i; 
+      size_t cu
+    }
+  }
+}
+
+void cmd_status(HashMap *units, const char *key){
   int count = 0;
-  char **units = get_units(hashmap, key, &count);
+  char **units_arr = get_units(units, key, &count);
   for (int i = 0; i < count; i++){
     char cmd[256];
-    snprintf(cmd, sizeof(cmd), "systemctl status %s", units[i]);
-    printf("=== %s ===\n", units[i]);
+    snprintf(cmd, sizeof(cmd), "systemctl status %s", units_arr[i]);
+    printf("=== %s ===\n", units_arr[i]);
     FILE *output = popen(cmd, "r"); 
     if (output == NULL) return;
     char line[256];
@@ -73,14 +119,14 @@ void cmd_status(HashMap *hashmap, const char *key){
     pclose(output);
   }
 }
-void cmd_logs(HashMap *hashmap, const char *key, int max_logs){
+void cmd_logs(HashMap *units, const char *key, int max_logs){
   int count = 0;
-  char **units = get_units(hashmap, key, &count);
+  char **units_arr = get_units(units, key, &count);
   for (int i = 0; i < count; i++){
     char cmd[256];
-    if (!max_logs) snprintf(cmd, sizeof(cmd), "journalctl -u %s", units[i]);
-    else snprintf(cmd, sizeof(cmd), "journalctl -u %s -n %d", units[i], max_logs);
-    printf("=== %s ===\n", units[i]);
+    if (!max_logs) snprintf(cmd, sizeof(cmd), "journalctl -u %s", units_arr[i]);
+    else snprintf(cmd, sizeof(cmd), "journalctl -u %s -n %d", units_arr[i], max_logs);
+    printf("=== %s ===\n", units_arr[i]);
     FILE *output = popen(cmd, "r"); 
     if (output == NULL) return;
     char line[256];
@@ -91,15 +137,20 @@ void cmd_logs(HashMap *hashmap, const char *key, int max_logs){
   }
 }
 
-void cmd_restart(HashMap *hashmap, const char *key){
+void cmd_restart(HashMap *units, const char *key){
   int count = 0;
-  char **units = get_units(hashmap, key, &count);
+  char **units_arr = get_units(units, key, &count);
   for (int i = 0; i < count; i++){
     char cmd[256];
-    snprintf(cmd, sizeof(cmd), "systemctl restart %s", units[i]);
-    printf("=== %s ===\n", units[i]);
+    snprintf(cmd, sizeof(cmd), "systemctl restart %s", units_arr[i]);
+    printf("=== %s ===\n", units_arr[i]);
     FILE *output = popen(cmd, "r"); 
-    printf("Restarted %s\n", units[i]);
+    printf("Restarted %s\n", units_arr[i]);
     pclose(output);
   }
+}
+
+void cmd_custom(HashMap *commands, const char *key){ //pmgr custom <group> Will list all the custom commands and there description or use case
+  int count = 0;
+  char **commands_arr = get_commands_info(commands, key, &count);
 }
