@@ -1,4 +1,4 @@
-#include "utils/units.h"
+#include "utils/hashmap.h"
 #include <string.h>
 #include <stdio.h> 
 #include <stdlib.h>
@@ -61,7 +61,7 @@ char **get_custom_commands(HashMap *commands, const char *key, int *count){
   char **commands_info_arr = NULL;
   char *current_command_ptr = NULL;
   *count = 0;
-  char *values = get(units, key);
+  char *values = get(commands, key);
   char delimiter = ',';
   int start_idx = 0;
   int end_idx = 0;
@@ -79,28 +79,41 @@ char **get_custom_commands(HashMap *commands, const char *key, int *count){
       current_command[end_idx - start_idx] = '\0';
 
       current_command_ptr = malloc(end_idx - start_idx + 1);
-      strcpy
+      strcpy(current_command_ptr, current_command);
+
+      commands_info_arr = realloc(commands_info_arr, (*count + 1) * sizeof(char *));
+      commands_info_arr[*count] = current_command_ptr;
+      (*count)++;
+      
+      end_idx = i + 1;
+      start_idx = i + 1;
+      while (values[start_idx] == ' ') start_idx++;
     }
   }
+  end_idx = i;
+  if (end_idx - start_idx == 0) return commands_info_arr;
+  
+  char current_command[end_idx - start_idx + 1];
+  for (int j = start_idx, command_idx = 0; j < end_idx; j++, command_idx++){
+    current_command[command_idx] = values[j];
+  }
+  current_command[end_idx - start_idx] = '\0';
+
+  current_command_ptr = malloc(end_idx - start_idx + 1);
+  strcpy(current_command_ptr, current_command);
+
+  commands_info_arr = realloc(commands_info_arr, (*count + 1) * sizeof(char *));
+  commands_info_arr[*count] = current_command_ptr;
+  (*count)++;
+
+  return commands_info_arr;
 }
 
+char *get_command_value(HashMap *commands, const char *group, const char *command_name){
+  char command_value[256];
+  snprintf(command_value, sizeof(command_value), "%s:%s", group, command_name);
   
-char **get_commands_info(HashMap *commands, const char *key, int *count){
-  char **commands_info_arr = NULL;
-  char *current_unit_ptr = NULL;
-  *count = 0;
-  char *values = get(units, key);
-  char delimiter = ',';
-  int start_idx = 0;
-  int end_idx = 0;
-  int i = 0;
-
-  for (i = 0; values[i] != '\0'; i++){
-    if (values[i] == delimiter){
-      end_idx = i; 
-      size_t cu
-    }
-  }
+  return get(commands, command_value);
 }
 
 void cmd_status(HashMap *units, const char *key){
@@ -150,7 +163,24 @@ void cmd_restart(HashMap *units, const char *key){
   }
 }
 
-void cmd_custom(HashMap *commands, const char *key){ //pmgr custom <group> Will list all the custom commands and there description or use case
+void cmd_custom(HashMap *commands, const char *key){
   int count = 0;
-  char **commands_arr = get_commands_info(commands, key, &count);
+  char **commands_arr = get_custom_commands(commands, key, &count);
+  printf("Custom commands for %s:\n", key);
+  for (int i = 0; i < count; i++){
+    printf("  %s\n", commands_arr[i]);
+    char *value = get_command_value(commands, key, commands_arr[i]);
+    char *del = strchr(value, '|');
+    if (del != NULL){
+      char *run_end = del;
+      while (run_end > value && *(run_end - 1) == ' ') run_end--;
+      char *desc = del + 1;
+      while (*desc == ' ') desc++;
+      printf("    run:  %.*s\n", (int)(run_end - value), value);
+      printf("    desc: %s\n", desc);
+    } else {
+      printf("    run:  %s\n", value);
+    }
+    printf("\n");
+  }
 }
