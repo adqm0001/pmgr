@@ -184,3 +184,28 @@ void cmd_custom(HashMap *commands, const char *key){
     printf("\n");
   }
 }
+
+void cmd_run(HashMap *commands, const char *group, const char *command){
+  char *value = get_command_value(commands, group, command);
+  if (value == NULL){
+    printf("Command not found.\n");
+    return;
+  }
+  char *del = strchr(value, '|');
+  char run[256];
+  if (del != NULL){
+    char *run_end = del;
+    while (run_end > value && *(run_end - 1) == ' ') run_end--;
+    snprintf(run, sizeof(run), "%.*s", (int)(run_end - value), value);
+  } else {
+    snprintf(run, sizeof(run), "%s", value);
+  }
+  printf("=== running: %s ===\n", command);
+  FILE *output = popen(run, "r");
+  if (output == NULL) return;
+  char line[256];
+  while(fgets(line, 256, output)) {
+    printf("%s", line);
+  }
+  pclose(output);
+}
