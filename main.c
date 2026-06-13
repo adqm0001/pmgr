@@ -22,8 +22,8 @@ int main(int argc, char *argv[]){
     return 1;
   }
 
-  const char *valid_commands[] = {"status", "logs", "restart", "custom", "run", "help", "init", "create-custom"}; 
-  int num_commands = 8;
+  const char *valid_commands[] = {"status", "logs", "restart", "custom", "run", "help", "init", "create-custom", "delete-custom", "delete-group"}; 
+  int num_commands = 10;
   char *command = argv[1];
   int found = 0;
   HashMap *units = hashmap_create(10);
@@ -42,7 +42,7 @@ int main(int argc, char *argv[]){
   }
 /*
 pmgr help
-pmgr init
+pmgr init <group> <units>
 pmgr status <group>
 pmgr logs <group>
 pmgr logs <group> -n <number>
@@ -51,16 +51,16 @@ pmgr custom <group>
 pmgr run <group> <command>
 pmgr create-custom <group> <command> "<shell command>"
 pmgr create-custom <group> <command> "<shell command>" -d "<description>"
+pmgr delete-custom <group> <command>
+pmgr delete-group <group>
 */
 
-
-  // Check if agrc == 2 so either help or init or wrong command/usage
-
+  // Check if agrc == 2 so either help or wrong command/usage
   if (argc == 2) {
     if (strcmp(command, "help") == 0){
       printf("Usage:\n");
       printf("  pmgr help\n");
-      printf("  pmgr init\n");
+      printf("  pmgr init <group> <units>\n");
       printf("  pmgr status <group>\n");
       printf("  pmgr logs <group>\n");
       printf("  pmgr logs <group> -n <number>\n");
@@ -68,8 +68,8 @@ pmgr create-custom <group> <command> "<shell command>" -d "<description>"
       printf("  pmgr custom <group>\n");
       printf("  pmgr run <group> <command>\n");
       printf("  pmgr create-custom <group> <command> \"<shell command>\" -d \"<description>\"\n");
-    } else if (strcmp(command, "init") == 0){
-      printf("To implement.\n"); 
+      printf("  pmgr delete-custom <group> <command>\n");
+      printf("  pmgr delete-group <group>\n");
     } else {
       printf("Incorrect usage.\n"); 
       free_hashmaps(units, commands);
@@ -77,7 +77,7 @@ pmgr create-custom <group> <command> "<shell command>" -d "<description>"
     }
   }
   
-  // We now check if agrc == 3 so either status, logs (no -n flag), restart, custom or incorrect usage.
+  // We now check if agrc == 3 so either status, logs (no -n flag), restart, custom, delete-group or incorrect usage.
   if (argc == 3) {
     if (strcmp(command, "status") == 0){
       cmd_status(units, argv[2]);
@@ -87,6 +87,8 @@ pmgr create-custom <group> <command> "<shell command>" -d "<description>"
       cmd_restart(units, argv[2]);
     } else if (strcmp(command, "custom") == 0){
       cmd_custom(commands, argv[2]);
+    } else if (strcmp(command, "delete-group") == 0){
+      cmd_delete_group(argv[2]);
     } else {
       printf("Incorrect usage.\n"); 
       free_hashmaps(units, commands);
@@ -94,12 +96,18 @@ pmgr create-custom <group> <command> "<shell command>" -d "<description>"
     }
   }
 
-  // We now check if argc == 4 so run command or incorrect usage 
+  // We now check if argc == 4 so run, delete-custom, init or incorrect usage 
   if (argc == 4) {
     if (strcmp(command, "run") == 0){
       cmd_run(commands, argv[2], argv[3]);
+    } else if (strcmp(command, "delete-custom") == 0){
+      cmd_delete_custom(argv[2], argv[3]);
+    } else if (strcmp(command, "init") == 0){
+      cmd_init(argv[2], argv[3]);
     } else if (strcmp(command, "create-custom") == 0){
-      printf("To implement.\n");
+      printf("Incorrect usage.\n");
+      free_hashmaps(units, commands);
+      return 1;
     } else {
       printf("Incorrect usage.\n"); 
       free_hashmaps(units, commands);
@@ -125,7 +133,7 @@ pmgr create-custom <group> <command> "<shell command>" -d "<description>"
         cmd_logs(units, group, max_logs);
       }
     } else if (strcmp(command, "create-custom") == 0){
-      printf("To implement.\n");
+      cmd_create_custom(argv[2], argv[3], argv[4], NULL);
     } else {
       printf("Incorrect usage.\n"); 
       free_hashmaps(units, commands);
@@ -142,7 +150,7 @@ pmgr create-custom <group> <command> "<shell command>" -d "<description>"
         free_hashmaps(units, commands);
         return 1;
       } else {
-        printf("To implement.\n");
+        cmd_create_custom(argv[2], argv[3], argv[4], argv[6]);
       }
     } else {
       printf("Incorrect usage.\n");
@@ -155,4 +163,3 @@ pmgr create-custom <group> <command> "<shell command>" -d "<description>"
 
   return 0;
 }
-

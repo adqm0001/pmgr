@@ -43,8 +43,9 @@ void load_config(HashMap *units, HashMap *commands){
       strcpy(current_group_ptr, current_group);
     } else if (in_commands_section){
       char *equal = strchr(trimmed, '=');
+      if (equal == NULL) continue;
       char *end = strchr(trimmed, '\n');
-      while (*(equal - 1) == ' ') equal--;
+      while (equal > trimmed && *(equal - 1) == ' ') equal--;
       size_t command_name_length = equal - trimmed;
       char command_name[command_name_length + 1];
       strncpy(command_name, trimmed, command_name_length);
