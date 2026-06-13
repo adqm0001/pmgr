@@ -5,8 +5,8 @@ A lightweight CLI process manager for systemd services. Define groups of units i
 ## Installation
 
 ```bash
-gcc main.c utils/hashmap.c config.c command.c -o pmgr
-sudo cp pmgr /usr/local/bin/pmgr
+make
+make install
 ```
 
 ## Config file
