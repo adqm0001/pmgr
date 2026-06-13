@@ -127,6 +127,7 @@ char *get_command_value(HashMap *commands, const char *group, const char *comman
 }
 
 void cmd_init(const char *group, const char *units){
+  system("mkdir -p /etc/pmgr");
   FILE *fptr = fopen("/etc/pmgr/config.ini", "a");
   if (fptr == NULL){
     perror("Error opening file");
