@@ -43,8 +43,9 @@ void load_config(HashMap *units, HashMap *commands){
       strcpy(current_group_ptr, current_group);
     } else if (in_commands_section){
       char *equal = strchr(trimmed, '=');
+      if (equal == NULL) continue;
       char *end = strchr(trimmed, '\n');
-      while (*(equal - 1) == ' ') equal--;
+      while (equal > trimmed && *(equal - 1) == ' ') equal--;
       size_t command_name_length = equal - trimmed;
       char command_name[command_name_length + 1];
       strncpy(command_name, trimmed, command_name_length);
@@ -62,16 +63,17 @@ void load_config(HashMap *units, HashMap *commands){
       size_t key_len = strlen(current_group_ptr) + strlen(command_name) + 2;
       char *key = malloc(key_len);
       snprintf(key, key_len, "%s:%s", current_group_ptr, command_name);
-      insert(commands, key, commands_value_ptr); 
+      insert(commands, key, commands_value_ptr); // Inserts (ex: key{cu-scraper:deploy},value{python3 r | Does something})
       char *existing = get(commands, current_group_ptr);
       if (existing != NULL) {
           size_t new_len = strlen(existing) + strlen(command_name_ptr) + 2;
           char *combined = malloc(new_len);
           snprintf(combined, new_len, "%s,%s", existing, command_name_ptr);
           free(existing);
-          insert(commands, current_group_ptr, combined);
+          insert(commands, current_group_ptr, combined); // Inserts (ex: key{cu-scraper},value{deploy,test})
+
       } else {
-          insert(commands, current_group_ptr, command_name_ptr);
+          insert(commands, current_group_ptr, command_name_ptr); // Inserts (ex: key{cu-scraper}, value{deploy})
       }
     } else if (trimmed[0] == 'u') { 
       char *after_equal = strchr(trimmed, '=') + 1; 
