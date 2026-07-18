@@ -1,0 +1,3 @@
+pmgr
+packaging/*.deb
+packaging/pmgr_*/usr/local/bin/pmgr

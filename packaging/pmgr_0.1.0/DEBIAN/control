@@ -1,0 +1,9 @@
+Package: pmgr
+Version: 0.1.0
+Section: admin
+Priority: optional
+Architecture: amd64
+Maintainer: adqm0001 <adqm0001@users.noreply.github.com>
+Description: Lightweight CLI process manager for systemd services
+ Define groups of systemd units in a config file and manage
+ them together with a single command.

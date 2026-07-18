@@ -4,6 +4,15 @@ A lightweight CLI process manager for systemd services. Define groups of units i
 
 ## Installation
 
+### From release (.deb)
+
+```bash
+wget https://github.com/adqm0001/pmgr/releases/latest/download/pmgr_0.1.0.deb
+sudo dpkg -i pmgr_0.1.0.deb
+```
+
+### From source
+
 ```bash
 make install
 ```
