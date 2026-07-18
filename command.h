@@ -12,3 +12,4 @@ void cmd_run(HashMap *commands, const char *key, const char* command);
 void cmd_create_custom(const char *group, const char *command, const char *script, const char *desc);
 void cmd_delete_custom(const char *group, const char *command);
 void cmd_delete_group(const char *group);
+void cmd_view_config();

@@ -22,8 +22,8 @@ int main(int argc, char *argv[]){
     return 1;
   }
 
-  const char *valid_commands[] = {"status", "logs", "restart", "custom", "run", "help", "init", "create-custom", "delete-custom", "delete-group"}; 
-  int num_commands = 10;
+  const char *valid_commands[] = {"status", "logs", "restart", "custom", "run", "help", "init", "create-custom", "delete-custom", "delete-group", "view-config", "reset"};
+  int num_commands = 12;
   char *command = argv[1];
   int found = 0;
   HashMap *units = hashmap_create(10);
@@ -70,6 +70,12 @@ pmgr delete-group <group>
       printf("  pmgr create-custom <group> <command> \"<shell command>\" -d \"<description>\"\n");
       printf("  pmgr delete-custom <group> <command>\n");
       printf("  pmgr delete-group <group>\n");
+      printf("  pmgr view-config\n");
+      printf("  pmgr reset\n");
+    } else if (strcmp(command, "view-config") == 0){
+      cmd_view_config();
+    } else if (strcmp(command, "reset") == 0){
+      cmd_reset();
     } else {
       printf("Incorrect usage.\n"); 
       free_hashmaps(units, commands);

@@ -43,6 +43,8 @@ pmgr run <group> <command>
 pmgr create-custom <group> <command> "<shell command>" -d "<description>"
 pmgr delete-custom <group> <command>
 pmgr delete-group <group>
+pmgr view-config
+pmgr reset
 ```
 
 ## Notes

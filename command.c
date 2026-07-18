@@ -532,3 +532,17 @@ void cmd_delete_group(const char *group){
 
   printf("Group %s deleted.\n", group);
 }
+
+void cmd_view_config(){
+  FILE *fptr = fopen("/etc/pmgr/config.ini", "r");
+  if (fptr == NULL){
+    printf("Config file not found. Use pmgr init to create it.\n");
+    return;
+  }
+  printf("=== Config: /etc/pmgr/config.ini ===\n");
+  char line[256];
+  while (fgets(line, sizeof(line), fptr)) {
+    printf("%s", line);
+  }
+  fclose(fptr);
+}
