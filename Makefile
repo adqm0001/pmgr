@@ -4,10 +4,10 @@ SRCS = main.c utils/hashmap.c config.c command.c
 TARGET = pmgr
 INSTALL_PATH = /usr/local/bin
 
-all:
-	$(CC) $(CFLAGS) $(SRCS) -o $(TARGET)
+.PHONY: install clean
 
-install: all
+install:
+	$(CC) $(CFLAGS) $(SRCS) -o $(TARGET)
 	sudo cp $(TARGET) $(INSTALL_PATH)/$(TARGET)
 
 clean:

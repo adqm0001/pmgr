@@ -5,7 +5,6 @@ A lightweight CLI process manager for systemd services. Define groups of units i
 ## Installation
 
 ```bash
-make
 make install
 ```
 
