@@ -25,7 +25,7 @@ deploy = git pull && sudo systemctl restart cu-scraper-api | Deploy the app
 
 ```
 pmgr help
-pmgr init <group> <units>
+pmgr init <group> [units]
 pmgr status <group>
 pmgr logs <group>
 pmgr logs <group> -n <number>
@@ -41,4 +41,5 @@ pmgr delete-group <group>
 
 - Most commands require `sudo`
 - Units are comma-separated in the config
+- Units are optional at init; add them later by editing the config
 - Custom command descriptions are optional

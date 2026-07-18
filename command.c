@@ -128,18 +128,44 @@ char *get_command_value(HashMap *commands, const char *group, const char *comman
 
 void cmd_init(const char *group, const char *units){
   system("mkdir -p /etc/pmgr");
+  FILE *file = fopen("/etc/pmgr/config.ini", "r");
+  if (file != NULL) {
+    fclose(file);
+    printf("Config file already exists. Use pmgr reset to delete it.\n");
+    return;
+  }
   FILE *fptr = fopen("/etc/pmgr/config.ini", "a");
   if (fptr == NULL){
     perror("Error opening file");
     exit(EXIT_FAILURE);
   }
-  size_t len = strlen(group) + strlen(units) + 16;
+  size_t len = strlen(group) + (units ? strlen(units) : 0) + 16;
   char *new_group = malloc(len);
-  snprintf(new_group, len, "\n[%s]\nunits = %s\n", group, units);
+  if (units) {
+    snprintf(new_group, len, "\n[%s]\nunits = %s\n", group, units);
+  } else {
+    snprintf(new_group, len, "\n[%s]\nunits =\n", group);
+  }
   fwrite(new_group, 1, strlen(new_group), fptr);
   free(new_group);
   fclose(fptr);
   printf("Group %s added.\n", group);
+}
+
+void cmd_reset(){
+  FILE *file = fopen("/etc/pmgr/config.ini", "r");
+  if (file == NULL) {
+    printf("File not found. Use pmgr init to create it.\n");
+    return;
+  }
+  fclose(file);
+
+  if (remove("/etc/pmgr/config.ini") == 0) {
+    printf("Config reset successfully.\n");
+  } else {
+    perror("Error resetting config.");
+  }
+  return;
 }
 
 void cmd_status(HashMap *units, const char *key){

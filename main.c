@@ -42,7 +42,7 @@ int main(int argc, char *argv[]){
   }
 /*
 pmgr help
-pmgr init <group> <units>
+pmgr init <group> [units]
 pmgr status <group>
 pmgr logs <group>
 pmgr logs <group> -n <number>
@@ -60,7 +60,7 @@ pmgr delete-group <group>
     if (strcmp(command, "help") == 0){
       printf("Usage:\n");
       printf("  pmgr help\n");
-      printf("  pmgr init <group> <units>\n");
+      printf("  pmgr init <group> [units]\n");
       printf("  pmgr status <group>\n");
       printf("  pmgr logs <group>\n");
       printf("  pmgr logs <group> -n <number>\n");
@@ -77,7 +77,7 @@ pmgr delete-group <group>
     }
   }
   
-  // We now check if agrc == 3 so either status, logs (no -n flag), restart, custom, delete-group or incorrect usage.
+  // We now check if agrc == 3 so either status, logs (no -n flag), restart, custom, delete-group, init (no units) or incorrect usage.
   if (argc == 3) {
     if (strcmp(command, "status") == 0){
       cmd_status(units, argv[2]);
@@ -89,6 +89,8 @@ pmgr delete-group <group>
       cmd_custom(commands, argv[2]);
     } else if (strcmp(command, "delete-group") == 0){
       cmd_delete_group(argv[2]);
+    } else if (strcmp(command, "init") == 0){
+      cmd_init(argv[2], NULL);
     } else {
       printf("Incorrect usage.\n"); 
       free_hashmaps(units, commands);
