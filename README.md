@@ -31,21 +31,21 @@ deploy = git pull && sudo systemctl restart cu-scraper-api | Deploy the app
 
 ## Usage
 
-```
-pmgr help
-pmgr init <group> [units]
-pmgr status <group>
-pmgr logs <group>
-pmgr logs <group> -n <number>
-pmgr restart <group>
-pmgr custom <group>
-pmgr run <group> <command>
-pmgr create-custom <group> <command> "<shell command>" -d "<description>"
-pmgr delete-custom <group> <command>
-pmgr delete-group <group>
-pmgr view-config
-pmgr reset
-```
+| Command | Description |
+| --- | --- |
+| `pmgr help` | Show the list of available commands |
+| `pmgr init <group> [units]` | Create the config file and add a group with optional units |
+| `pmgr status <group>` | Show `systemctl status` for every unit in the group |
+| `pmgr logs <group>` | Show `journalctl` logs for every unit in the group |
+| `pmgr logs <group> -n <number>` | Show the last `<number>` log lines per unit |
+| `pmgr restart <group>` | Restart every unit in the group |
+| `pmgr custom <group>` | List the custom commands defined for the group |
+| `pmgr run <group> <command>` | Run one of the group's custom commands |
+| `pmgr create-custom <group> <command> "<shell command>" -d "<description>"` | Add a custom command to the group (description optional) |
+| `pmgr delete-custom <group> <command>` | Remove a custom command from the group |
+| `pmgr delete-group <group>` | Remove the group and its custom commands from the config |
+| `pmgr view-config` | Print the contents of the config file |
+| `pmgr reset` | Delete the config file so you can start over with `init` |
 
 ## Notes
 
